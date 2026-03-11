@@ -60,7 +60,6 @@ ipch/
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
 
