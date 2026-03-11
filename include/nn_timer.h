@@ -2,124 +2,65 @@
 #include <chrono>
 #include <string>
 #include <iostream>
-#include <vector>
 #include "nn_logger.h"
 
 namespace nn {
 
-    // ������� ������ ��� ������ ������� ����������
+    // Простой таймер для замера времени выполнения
     class Timer {
     private:
-        std::chrono::high_resolution_clock::time_point start;
-        std::chrono::high_resolution_clock::time_point end;
-        bool running;
+        std::chrono::high_resolution_clock::time_point start_time;
+        std::chrono::high_resolution_clock::time_point end_time;
+        bool is_running;
         std::string label;
 
     public:
-        Timer(const std::string& lbl = "Timer") : label(lbl), running(false) {}
-
-        void start_time() {
-            start = std::chrono::high_resolution_clock::now();
-            running = true;
+        // Конструктор с именем таймера
+        Timer(const std::string& lbl = "Таймер")
+            : label(lbl), is_running(false) {
         }
 
+        // Запустить замер
+        void start() {
+            start_time = std::chrono::high_resolution_clock::now();
+            is_running = true;
+        }
+
+        // Остановить замер
         void stop() {
-            if (running) {
-                end = std::chrono::high_resolution_clock::now();
-                running = false;
+            if (is_running) {
+                end_time = std::chrono::high_resolution_clock::now();
+                is_running = false;
             }
         }
 
-        // ���������� ����� � �������������
+        // Получить прошедшее время в миллисекундах
         double elapsed_ms() const {
-            if (running) {
+            if (is_running) {
                 auto now = std::chrono::high_resolution_clock::now();
-                return std::chrono::duration<double, std::milli>(now - start).count();
+                return std::chrono::duration<double, std::milli>(now - start_time).count();
             }
-            return std::chrono::duration<double, std::milli>(end - start).count();
+            return std::chrono::duration<double, std::milli>(end_time - start_time).count();
         }
 
-        // ���������� ����� � ��������
+        // Получить прошедшее время в секундах
         double elapsed_sec() const {
             return elapsed_ms() / 1000.0;
         }
 
-        // ����� ���������� � ���
+        // Вывести результат в лог
         void print() const {
-            Logger::info(label + ": " + std::to_string(elapsed_ms()) + " ms");
+            Logger::info(label + ": " + std::to_string(elapsed_ms()) + " мс");
         }
-
-        // RAII �����: �������������� �����/����
-        class ScopedTimer {
-        private:
-            Timer& timer;
-        public:
-            ScopedTimer(Timer& t) : timer(t) { timer.start_time(); }
-            ~ScopedTimer() { timer.stop(); }
-        };
     };
 
-    // ������������� ��� ����� ���������� �� ��������� �������
-    class Profiler {
-    private:
-        struct Record {
-            std::string name;
-            double total_ms;
-            int count;
-            double min_ms;
-            double max_ms;
-        };
-        std::vector<Record> records;
-
-    public:
-        void record(const std::string& name, double elapsed_ms) {
-            for (auto& rec : records) {
-                if (rec.name == name) {
-                    rec.total_ms += elapsed_ms;
-                    rec.count++;
-                    rec.min_ms = std::min(rec.min_ms, elapsed_ms);
-                    rec.max_ms = std::max(rec.max_ms, elapsed_ms);
-                    return;
-                }
-            }
-            records.push_back({ name, elapsed_ms, 1, elapsed_ms, elapsed_ms });
-        }
-
-        void print_summary() const {
-            Logger::info("=== Profiler Summary ===");
-            for (const auto& rec : records) {
-                double avg = rec.total_ms / rec.count;
-                std::cout << rec.name << ": "
-                    << "avg=" << avg << "ms, "
-                    << "min=" << rec.min_ms << "ms, "
-                    << "max=" << rec.max_ms << "ms, "
-                    << "count=" << rec.count << std::endl;
-            }
-            Logger::info("========================");
-        }
-
-        void clear() { records.clear(); }
-    };
-
-    // ���������� ������������� (singleton)
-    inline Profiler& global_profiler() {
-        static Profiler instance;
-        return instance;
-    }
-
-    // ������� ��� �������� �������������
+    // Простой макрос для старта таймера
 #define NN_TIMER_START(name) \
         nn::Timer timer_##name(#name); \
         timer_##name.start();
 
-#define NN_TIMER_END(name) \
+    // Простой макрос для остановки и вывода результата
+#define NN_TIMER_STOP(name) \
         timer_##name.stop(); \
-        nn::global_profiler().record(#name, timer_##name.elapsed_ms());
-
-#define NN_TIMER_SCOPE(name) \
-        nn::Timer timer_##name(#name); \
-        nn::Timer::ScopedTimer scope(timer_##name); \
-        auto profiler_guard_##name = [&]() { \
-            nn::global_profiler().record(#name, timer_##name.elapsed_ms()); \
-        };
+        timer_##name.print();
 }
