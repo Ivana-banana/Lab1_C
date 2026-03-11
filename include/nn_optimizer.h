@@ -4,18 +4,18 @@
 
 namespace nn {
 
-    // Интерфейс оптимизатора
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     class Optimizer {
     public:
         float learningRate;
         Optimizer(float lr) : learningRate(lr) {}
         virtual ~Optimizer() {}
 
-        // Обновление параметра: weight = weight - lr * gradient
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: weight = weight - lr * gradient
         virtual void step(Matrix& weight, const Matrix& gradient) = 0;
     };
 
-    // Стохастический градиентный спуск (SGD)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (SGD)
     class SGD : public Optimizer {
     public:
         SGD(float lr) : Optimizer(lr) {}
@@ -28,6 +28,6 @@ namespace nn {
             // w = w - lr * grad
             Matrix update = gradient.scale(learningRate);
             weight = weight - update;
-        }
+        };
     };
 }

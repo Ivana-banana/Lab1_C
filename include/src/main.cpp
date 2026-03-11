@@ -25,7 +25,7 @@ void testMatrix() {
     assert(E.at(0, 0) == 2.0f);
 
     Logger::info("Matrix Tests Passed.");
-}
+};
 
 // ���� ��������� ��������
 void testDataset() {
@@ -40,7 +40,7 @@ void testDataset() {
     assert(lin.size() == 10);
 
     Logger::info("Dataset Tests Passed.");
-}
+};
 
 // ���� ������������
 void testOptimizer() {
@@ -59,7 +59,7 @@ void testOptimizer() {
     assert(std::abs(w.at(0, 0) - 9.5f) < 1e-5f);
 
     Logger::info("Optimizer Tests Passed.");
-}
+};
 
 // ������������ ������������� ������ ��� ������ ���� �������� (��� ������ ����)
 void demoTrainingStep() {
@@ -107,7 +107,7 @@ void demoTrainingStep() {
 
     Logger::info("Weights updated successfully.");
     Logger::debug("New Weight 0: " + std::to_string(weights.at(0, 0)));
-}
+};
 
 int main() {
     // ��������� ������ �����������
@@ -125,6 +125,7 @@ int main() {
         Logger::error(std::string("Exception caught: ") + e.what());
         return 1;
     }
-
+    int i;
+    std::cin >> i; 
     return 0;
-}
+};

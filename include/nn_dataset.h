@@ -21,7 +21,7 @@ namespace nn {
             for (size_t i = 0; i < in.size(); ++i) s.input.at(0, i) = in[i];
             for (size_t i = 0; i < out.size(); ++i) s.target.at(0, i) = out[i];
             data.push_back(s);
-        }
+        };
 
         // ��������� ������ XOR
         static Dataset generateXOR() {
@@ -31,7 +31,7 @@ namespace nn {
             ds.add({ 1.0f, 0.0f }, { 1.0f });
             ds.add({ 1.0f, 1.0f }, { 0.0f });
             return ds;
-        }
+        };
 
         // ��������� �������� ������
         static Dataset generateLinear(int count, float k = 2.0f, float b = 1.0f) {
@@ -44,7 +44,7 @@ namespace nn {
                 ds.add({ x }, { y });
             }
             return ds;
-        }
+        };
 
         size_t size() const { return data.size(); }
     };
