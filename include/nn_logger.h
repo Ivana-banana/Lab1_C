@@ -17,9 +17,9 @@ namespace nn {
             if (level > currentLevel) return;
 
             std::string prefix = "";
-            if (level == ERROR) prefix = "[ERROR] ";
-            else if (level == INFO) prefix = "[INFO]  ";
-            else if (level == DEBUG) prefix = "[DEBUG] ";
+            if (level == LogLevel::ERROR) prefix = "[ERROR] ";
+            else if (level == LogLevel::INFO) prefix = "[INFO]  ";
+            else if (level == LogLevel::DEBUG) prefix = "[DEBUG] ";
 
             std::cerr << prefix << msg << std::endl;
         }
