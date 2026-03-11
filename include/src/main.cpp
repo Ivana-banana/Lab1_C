@@ -99,6 +99,7 @@ int testDataAdd()
     }
 
     std::cout << "Add test passed\n";
+    return 0;
 };
 // ������������ ������������� ������ ��� ������ ���� �������� (��� ������ ����)
 void demoTrainingStep() {
