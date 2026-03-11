@@ -60,7 +60,46 @@ void testOptimizer() {
 
     Logger::info("Optimizer Tests Passed.");
 };
+int testDataAdd()
+{
+   Logger::info("Running DataAdd Tests..."); 
+   nn::Dataset ds;
 
+    std::vector<float> input = {1.0f, 2.0f, 3.0f};
+    std::vector<float> target = {0.0f, 1.0f};
+
+    ds.add(input, target);
+
+    // Проверка размера
+    if (ds.data.size() != 1) {
+        std::cout << "Test failed: dataset size\n";
+        return 1;
+    }
+
+    // Проверка размеров матриц
+    if (ds.data[0].input.cols != 3) {
+        std::cout << "Test failed: input size\n";
+        return 1;
+    }
+
+    if (ds.data[0].target.cols != 2) {
+        std::cout << "Test failed: target size\n";
+        return 1;
+    }
+
+    // Проверка значений
+    if (ds.data[0].input.at(0,0) != 1.0f) {
+        std::cout << "Test failed: input value\n";
+        return 1;
+    }
+
+    if (ds.data[0].target.at(0,1) != 1.0f) {
+        std::cout << "Test failed: target value\n";
+        return 1;
+    }
+
+    std::cout << "Add test passed\n";
+};
 // ������������ ������������� ������ ��� ������ ���� �������� (��� ������ ����)
 void demoTrainingStep() {
     Logger::info("=== Demo: Manual Training Step ===");
@@ -118,7 +157,7 @@ int main() {
         testDataset();
         testOptimizer();
         demoTrainingStep();
-
+        if(testDataAdd != 0){throw std::runtime_error("Dataset add test failed");};
         std::cout << "\nAll tests completed successfully." << std::endl;
     }
     catch (const std::exception& e) {
